@@ -30,6 +30,11 @@ class Department extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
     }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
     public function designations()
     {
         return $this->hasMany(Designation::class);

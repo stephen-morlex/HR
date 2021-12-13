@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDocumentTypesTable extends Migration
+class AddColumnStatusIdToEmployee extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateDocumentTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('document_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('url');
-            $table->string('slug')->nullable();
-            $table->timestamps();
+        Schema::table('employees', function (Blueprint $table) {
+            $table->foreignId('status_id')->nullable()->constrained()->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
@@ -29,6 +26,8 @@ class CreateDocumentTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('document_types');
+        Schema::table('employees', function (Blueprint $table) {
+            $table->dropColumn('status_id');
+        });
     }
 }

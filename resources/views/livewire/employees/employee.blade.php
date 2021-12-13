@@ -3,18 +3,17 @@
         {{-- Nav --}}
         <x-navbar>
             <x-slot name="page">
-                Company Policy
+                Employee
             </x-slot>
         </x-navbar>
         {{-- Cards --}}
         <x-cards>
             <x-slot name="model">
-                Company Policy
+                Employee
             </x-slot>
             <x-slot name="total">
-                {{ $totalPolicies->count() }}
+                {{-- {{ $totalemps->count() }} --}}
             </x-slot>
-
         </x-cards>
         {{-- Tables Section --}}
         <div class="px-4 md:px-10 mx-auto w-full -m-24">
@@ -27,14 +26,14 @@
                                 <div
                                     class="relative w-full px-4 max-w-full flex-grow flex justify-between items-center">
                                     <h3 class="font-bold uppercase text-lg text-gray-800">
-                                        Policy Table
+                                        Employee Table
                                     </h3>
                                     @include('includes.message')
                                 </div>
                             </div>
                             <div class="mt-4 flex justify-between items-center">
                                 <div class="flex items-center justify-between">
-                                    <button wire:click="create()"
+                                    <a wire:click="create()"
                                         class="transition ease-in-out duration-700 flex items-center bg-blue-50 p-2 text-blue-800 hover:bg-blue-200 shadow rounded-md cursor-pointer">
                                         <svg viewBox="0 0 24 24" class="h-6 w-6 mr-2 fill-current text-blue-700">
                                             <path fill="none" d="M0 0h24v24H0V0Z" />
@@ -42,7 +41,7 @@
                                                 d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4 -4 1.79-4 4 1.79 4 4 4Zm-9-2V8c0-.55-.45-1-1-1s-1 .45-1 1v2H2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1H6Zm9 4c-2.67 0-8 1.34-8 4v1c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-1c0-2.66-5.33-4-8-4Z" />
                                         </svg>
                                         Create
-                                    </button>
+                                    </a>
                                     <button wire:click="export()"
                                         class="transition ease-in-out duration-700 ml-4 flex items-center bg-green-50 p-2 text-green-800 shadow hover:bg-green-200 rounded-md cursor-pointer">
                                         <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current text-green-800 mr-2 ">
@@ -53,10 +52,10 @@
                                         Export
                                     </button>
                                     @if ($isOpen)
-                                        @include('livewire.policies.create')
+                                        @include('livewire.employees.create')
                                     @endif
                                     @if ($deleteModal)
-                                        @include('livewire.policies.delete')
+                                        @include('livewire.employees.delete')
                                     @endif
 
                                 </div>
@@ -71,8 +70,7 @@
                                         </select>
                                     </div>
                                     <div class="relative text-gray-600">
-                                        <input type="search" wire:model="search"
-                                            placeholder="Search for Allowance Type..."
+                                        <input type="search" wire:model="search" placeholder="Search for branches..."
                                             class="bg-white h-10 px-5 pr-10 rounded-md text-sm focus:outline-none">
                                         <button type="submit"
                                             class="absolute right-0 top-0 mt-3 mr-4 focus:outline-none">
@@ -94,19 +92,33 @@
                             <div class="flex flex-wrap mt-4">
                                 <div class="w-full mb-12 px-4">
                                     <div class="block w-full overflow-x-auto">
-
                                         <table class="items-center w-full bg-transparent border-collapse">
                                             <thead>
                                                 <tr>
                                                     <th
                                                         class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left bg-gray-100 text-gray-600 border-gray-200">
+                                                        <a wire:click.prevent="sortBy('employee_id')" role="button"
+                                                            href="#" class="flex items-center">
+                                                            Employee ID
+                                                            @include('includes._sort-icon', ['field' => 'employee_id'])
+                                                        </a>
+                                                    </th>
+                                                    <th
+                                                        class="px-6 align-start border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left bg-gray-100 text-gray-600 border-gray-200">
                                                         <a wire:click.prevent="sortBy('name')" role="button" href="#"
                                                             class="flex items-center">
                                                             Name
                                                             @include('includes._sort-icon', ['field' => 'name'])
                                                         </a>
                                                     </th>
-
+                                                    <th
+                                                        class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left bg-gray-100 text-gray-600 border-gray-200">
+                                                        <a wire:click.prevent="sortBy('email')" role="button" href="#"
+                                                            class="flex items-center">
+                                                            Email
+                                                            @include('includes._sort-icon', ['field' => 'email'])
+                                                        </a>
+                                                    </th>
                                                     <th
                                                         class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left bg-gray-100 text-gray-600 border-gray-200">
                                                         <a wire:click.prevent="sortBy('branch_id')" role="button"
@@ -117,26 +129,28 @@
                                                     </th>
                                                     <th
                                                         class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left bg-gray-100 text-gray-600 border-gray-200">
-                                                        <a wire:click.prevent="sortBy('description')" role="button"
+                                                        <a wire:click.prevent="sortBy('department_id')" role="button"
                                                             href="#" class="flex items-center">
-                                                            Description
-                                                            @include('includes._sort-icon', ['field' => 'description'])
+                                                            Department
+                                                            @include('includes._sort-icon', ['field' =>
+                                                            'department_id'])
                                                         </a>
                                                     </th>
                                                     <th
                                                         class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left bg-gray-100 text-gray-600 border-gray-200">
-                                                        <a wire:click.prevent="sortBy('attachment')" role="button"
+                                                        <a wire:click.prevent="sortBy('designation_id')" role="button"
                                                             href="#" class="flex items-center">
-                                                            Attachment
-                                                            @include('includes._sort-icon', ['field' => 'attachment'])
+                                                            Designation
+                                                            @include('includes._sort-icon', ['field' =>
+                                                            'designation_id'])
                                                         </a>
                                                     </th>
                                                     <th
                                                         class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left bg-gray-100 text-gray-600 border-gray-200">
-                                                        <a wire:click.prevent="sortBy('created_at')" role="button"
-                                                            href="#" class="flex items-center">
-                                                            Created At
-                                                            @include('includes._sort-icon', ['field' => 'created_at'])
+                                                        <a wire:click.prevent="sortBy('join')" role="button" href="#"
+                                                            class="flex items-center">
+                                                            Date of Joining
+                                                            @include('includes._sort-icon', ['field' => 'join'])
                                                         </a>
                                                     </th>
                                                     <th
@@ -146,43 +160,41 @@
 
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                @forelse ($policies as $policy)
+                                            <tbody class=" overflow-visible">
+                                                @forelse ($employees as $emp)
                                                     <tr>
                                                         <th
                                                             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4 text-left flex items-center">
                                                             <p class="text-gray-900 capitalize tracking-wide">
-                                                                {{ $policy->name }} </p>
+                                                                {{ $emp->emp_number }} </p>
                                                         </th>
-
                                                         <td
                                                             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                                                            {{ $policy->branch->name }}
-                                                        </td>
-
-                                                        <td
-                                                            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                                                            {{ $policy->description }}
-                                                        </td>
-                                                        <td
-                                                            class="border-t-0 px-12 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                                                            @if (!empty($policy->document))
-                                                                <a target="_blank"
-                                                                    class=" cursor-pointer text-green-600 bg-green-50 p-2 rounded-lg"
-                                                                    href="{{ asset('storage/' . $policy->document->attachment) }}">
-                                                                    View File</a>
-                                                            @else
-                                                                <span
-                                                                    class="text-yellow-600 font-light bg-yellow-50 p-2 rounded-lg">{{ 'No document' }}</span>
-                                                            @endif
+                                                            {{ $emp->name }}
                                                         </td>
                                                         <td
                                                             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                                                            {{ $policy->created_at->diffForHumans() }}
+                                                            {{ $emp->email }}
+                                                        </td>
+                                                        {{-- <td
+                                                            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                                                            {{ $emp->branch->name }}
                                                         </td>
                                                         <td
                                                             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                                                            <button wire:click="edit({{ $policy->id }})"
+                                                            {{ $emp->department->name }}
+                                                        </td>
+                                                        <td
+                                                            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                                                            {{ $emp->designation->name }}
+                                                        </td> --}}
+                                                        <td
+                                                            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                                                            {{ $emp->join }}
+                                                        </td>
+                                                        <td
+                                                            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                                                            <button wire:click="edit({{ $emp->id }})"
                                                                 class="p-1 transition ease-in-out duration-700 text-blue-600 hover:bg-blue-600 hover:text-white rounded">
                                                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                                                     xmlns="http://www.w3.org/2000/svg">
@@ -191,7 +203,7 @@
                                                                     </path>
                                                                 </svg>
                                                             </button>
-                                                            <button wire:click="confrimDeleteModal({{ $policy->id }})"
+                                                            <button wire:click="confrimDeleteModal({{ $emp->id }})"
                                                                 class="transition ease-in-out duration-700 p-1 text-red-600 hover:bg-red-600 hover:text-white rounded">
                                                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                                                     xmlns="http://www.w3.org/2000/svg">
@@ -209,7 +221,7 @@
                                         </table>
                                     </div>
                                     <div class="mt-4">
-                                        {{ $policies->links() }}
+                                        {{-- {{ $emps->links() }} --}}
                                     </div>
                                 </div>
                             </div>

@@ -5,14 +5,16 @@ namespace App\Http\Livewire\Policies;
 use App\Models\Branch;
 use App\Models\Document;
 use App\Models\Policy;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class Pocilicies extends Component
 {
+
     use WithPagination, WithFileUploads;
-    public $policy_id, $name, $branch_id, $description, $attachment;
+    public $policy_id, $name, $branch_id, $description, $attachment, $pathToFile;
     public $totalPolicies;
     public $branches = [];
 
@@ -92,26 +94,23 @@ class Pocilicies extends Component
     protected $rules = [
         'name' => 'required|min:3',
         'description' => 'required|min:5',
-        'attachment' => 'required|file||max:1024',
+        'attachment' => 'required|file||max:1024|mimes:pdf',
         'branch_id' => 'required'
     ];
-
     public function store()
     {
+
         $this->validate();
         $policy = Policy::updateOrCreate(['id' => $this->policy_id], [
             'name' => $this->name,
             'description' => $this->description,
             'branch_id' => $this->branch_id,
         ]);
+        // $title = md5($this->attachment . microtime()) . '.' . $this->attachment->extension();
 
-        $title = md5($this->attachment . microtime()) . '.' . $this->attachment->extension();
-        $this->attachment->store('attachments', $title);
-        $attach = new Document([
-            'name' => $this->name,
+        $policy->document()->updateOrCreate([
+            'attachment' => $this->attachment->store('policies', 'public')
         ]);
-        $policy->document()->save($attach);
-
         // dd($policy);
         session()->flash(
             'message',
@@ -127,14 +126,15 @@ class Pocilicies extends Component
         $this->policy_id = $id;
         $this->name = $policy->name;
         $this->branch_id = $policy->branch_id;
-        $this->attachment = $policy->attachment;
+        $this->attachment = $policy->document->attachment;
         $this->description = $policy->description;
-
         $this->openModal();
+        // dd($policy);
     }
 
     public function delete()
     {
+
         Policy::destroy($this->policy_id);
         session()->flash('message', 'Company Policy Deleted Successfully.');
         $this->closeDeleteModal();
@@ -145,5 +145,12 @@ class Pocilicies extends Component
     public function export()
     {
         // return Excel::download(new DesignationExport, 'designation.xlsx');
+    }
+
+    // Download File
+
+    public function save()
+    {
+        return Storage::disk('public/storage/policies')->download('policy.csv');
     }
 }

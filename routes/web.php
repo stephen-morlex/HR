@@ -21,9 +21,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard/employee', function () {
-    return view('livewire.test');
-})->name('employee');
+// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard/employee', function () {
+//     return view('livewire.test');
+// })->name('employee');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard/award', function () {
     return view('award');
@@ -67,3 +67,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard/paysheet-type',
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard/company-policy', function () {
     return view('company-policy');
 })->name('company-policy');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard/employee', function () {
+    return view('employee');
+})->name('employee');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard/employee/create', function () {
+    return view('employee');
+})->name('employee.create');

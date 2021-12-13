@@ -15,6 +15,7 @@
             </div>
         </x-slot>
         <x-slot name="content">
+
             <div class="">
                 <x-jet-label class="font-light text-gray-600" for="name" value="{{ __('Name') }}" />
                 <x-jet-input id="name" type="text"
@@ -29,7 +30,8 @@
                     class="w-full mt-2 mb-6 px-6 py-3 border rounded-lg text-lg text-gray-700 outline-none focus:outline-none">
                     <option value="#" class="py-1 text-light text-gray-600">Select a branch</option>
                     @foreach ($branches as $branch)
-                        <option class="py-1 text-light text-gray-600" value="{{ $branch->id }}">{{ $branch->name }}
+                        <option class="py-1 text-light text-gray-600" value="{{ $branch->id }}">
+                            {{ $branch->name }}
                         </option>
                     @endforeach
                 </select>
@@ -37,7 +39,6 @@
                         class="error w-full bg-red-50 p-2 rounded-md text-red-800">{{ $message }}</span>
                 @enderror
             </div>
-
             <div class="mt-2">
                 <x-jet-label class="font-light text-gray-600" for="description" value="{{ __('Desciprtion') }}" />
                 <x-jet-input id="description" type="textarea"
@@ -56,6 +57,7 @@
                         class="error text-red-800 bg-red-50 rounded-md p-2">{{ $message }}</span>
                 @enderror
             </div>
+
         </x-slot>
         <x-slot name="footer">
             <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">

@@ -36,6 +36,10 @@ class Branch extends Model
     {
         return $this->hasMany(Policy::class);
     }
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 
 
     /** Get the route key for the model.
